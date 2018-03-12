@@ -1,0 +1,16 @@
+# A book is a series of pages assembled for easy portability and
+# reading, as well as the composition contained in it.
+type Book {
+  title: String
+  published: String
+  imageUri: String
+  shortDescription: String
+  author: [Author]
+}
+
+# An author is the creator or originator of any written work such as a
+# book or play, and is thus also a writer
+type Author {
+  name: String
+  books: [Book]
+}

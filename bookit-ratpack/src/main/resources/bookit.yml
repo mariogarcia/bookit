@@ -1,0 +1,8 @@
+version: 0.1.0
+
+dataSource:
+  driverClassName: org.postgresql.Driver
+  uri: jdbc:postgresql://db/bookit
+  username: bookit
+  password: bookit
+  flywaySchemas: public,bookit

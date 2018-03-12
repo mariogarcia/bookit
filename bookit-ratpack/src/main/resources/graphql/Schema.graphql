@@ -1,0 +1,10 @@
+# Available queries
+type Query {
+  # List all available books
+  books(offset: Int, maxRows: Int): [Book]
+  login(credentials: Credentials!): Login
+}
+
+schema {
+  query: Query
+}

@@ -1,0 +1,11 @@
+# Credentials used when login
+input Credentials {
+  username: String
+  password: String
+}
+
+# Information about a successful login
+type Login {
+  token: String
+  name: String
+}
