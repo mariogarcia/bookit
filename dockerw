@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Shows command usage
+function usage {
+    echo "./dockerw [dev|pre|build]"
+}
+
+# Opens dev environment in a tmux session
+function run_dev {
+    docker-compose -f dockerw-dev.yml run -p 80:3000 -p 8888:8888 dev && \
+        docker-compose -f dockerw-dev.yml stop
+}
+
+# Runs a docker compose environment as if it were production
+function run_pre {
+   docker-compose -f dockerw-pre.yml up
+}
+
+# Builds front and back docker images ready to be deployed
+function build_images {
+    echo "[dockerw] building images"
+    docker run -v `pwd`:/tmp/project -it openjdk:8-slim /tmp/project/docker/bin/build-images.sh /tmp/project && \
+        docker build -t github.com/mariogarcia/bookit-front -f docker/front/Dockerfile . && \
+        docker build -t github.com/mariogarcia/bookit-ratpack -f docker/graphql/Dockerfile .
+}
+
+# Checks docker is present
+function check_docker_present {
+    if hash docker 2>/dev/null; then
+        echo "[dockerw] 'docker' is present"
+    else
+        echo "[dockerw] can't find 'docker' command"
+        exit 1;
+    fi
+}
+
+# Checks docker-compose is present
+function check_docker_compose_present {
+    if hash docker 2>/dev/null; then
+        echo "[dockerw] 'docker-compose' is present"
+    else
+        echo "[dockerw] can't find 'docker-compose' command"
+        exit 1;
+    fi
+}
+
+# Checks both docker and docker-compose existence
+function apply_checks {
+   check_docker_present
+   check_docker_compose_present
+}
+
+# evaluates user execution
+function evaluate {
+    case $1 in
+        dev)
+            apply_checks
+            run_dev
+            ;;
+
+        pre)
+            apply_checks
+            run_pre
+            ;;
+
+        build)
+            apply_checks
+            build_images
+            ;;
+
+        *)
+            usage
+            ;;
+    esac
+}
+
+# entry point
+evaluate $1

@@ -1,0 +1,4 @@
+include 'bookit-react'
+include 'bookit-ratpack'
+
+rootProject.name = 'bookit-graphql'

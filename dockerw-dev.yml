@@ -1,0 +1,17 @@
+version: "2"
+services:
+  db:
+    image: postgres:10.1-alpine
+    volumes:
+      - ./docker/dev/db:/docker-entrypoint-initdb.d:ro
+
+  dev:
+    build: ./docker/dev
+    image: github.com/mariogarcia/bookit-dev
+    links:
+      - db
+
+    volumes:
+      - $PWD:/home/dev/ws
+      - $HOME/.m2:/home/dev/.m2
+      - $HOME/.gradle:/home/dev/.gradle
