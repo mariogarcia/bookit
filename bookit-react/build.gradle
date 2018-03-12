@@ -1,0 +1,58 @@
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+    mavenCentral()
+  }
+  dependencies {
+    classpath "com.moowork.gradle:gradle-node-plugin:1.2.0"
+  }
+}
+
+apply plugin: 'com.moowork.node'
+
+node {
+  version = '9.3.0'
+  npmVersion = '5.3.0'
+  yarnVersion = '1.0.1'
+
+  download = true
+
+  // Set the work directory for unpacking node
+  workDir = file("${project.buildDir}/nodejs")
+
+  // Set the work directory for NPM
+  npmWorkDir = file("${project.buildDir}/npm")
+
+  // Set the work directory where node_modules should be located
+  nodeModulesDir = file("${project.projectDir}")
+}
+
+task build(type: NpmTask) {
+  group 'bookit'
+  description 'Builds Bookit application'
+
+  args = ['run-script', 'build']
+}
+
+task test(type: NpmTask) {
+  group 'bookit'
+  description 'Tests Bookit application'
+
+  args = ['run-script', 'test:coverage']
+}
+
+task run(type: NpmTask) {
+  group 'bookit'
+  description 'Runs Bookit application'
+
+  args = ['run-script', 'start']
+}
+
+task installDependency(type: NpmTask) {
+  group 'bookit'
+  description 'Install a dependency'
+
+  args = ['install', 'react-router-redux']
+}

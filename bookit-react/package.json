@@ -1,0 +1,36 @@
+{
+  "name": "bookit",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.18.0",
+    "immutable": "^3.8.2",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-formal": "^0.25.4",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "^5.0.0-alpha.6",
+    "react-scripts": "1.1.1",
+    "redux": "^3.7.2",
+    "redux-saga": "^0.16.0",
+    "yup": "^0.24.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "axios-mock-adapter": "^1.14.1",
+    "babel-jest": "^22.4.1",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "jest": "^22.4.2",
+    "react-test-renderer": "^16.2.0"
+  }
+}

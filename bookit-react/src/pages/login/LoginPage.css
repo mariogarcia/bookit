@@ -1,0 +1,7 @@
+div.login-content {
+    width: 100%;
+}
+
+span.validation-error {
+    color: red;
+}

@@ -1,0 +1,13 @@
+div.card-body {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+div.card {
+    width: 18rem;
+    margin-right: 2em;
+}
+
+div.card img {
+    height: 21rem;
+}
