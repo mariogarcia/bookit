@@ -1,4 +1,4 @@
-FROM openjdk:8-slim
+FROM openjdk:8-jdk-slim-stretch
 
 #    ___                        _             _
 #   |   \ ___ _ __  ___ _ _  __| |___ _ _  __(_)___ ___
@@ -17,6 +17,9 @@ RUN apt-get update && apt-get install -yq \
     rlwrap && \
     apt-get clean && \
     rm -fr /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+
+
 
 #    _   _
 #   | | | |___ ___ _ _

@@ -5,12 +5,16 @@ services:
     volumes:
       - ./docker/dev/db:/docker-entrypoint-initdb.d:ro
 
+  db-client:
+    build: ./docker/dev/db-client
+    image: github.com/mariogarcia/bookit-db-client
+
   dev:
     build: ./docker/dev
     image: github.com/mariogarcia/bookit-dev
     links:
       - db
-
+      - db-client
     volumes:
       - $PWD:/home/dev/ws
       - $HOME/.m2:/home/dev/.m2
