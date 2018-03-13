@@ -8,5 +8,6 @@ class Module extends AbstractModule {
   void configure() {
     bind(SecurityService).in(Scopes.SINGLETON)
     bind(SecurityRepository).in(Scopes.SINGLETON)
+    bind(SecurityInstrumentation).in(Scopes.SINGLETON)
   }
 }
