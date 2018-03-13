@@ -43,11 +43,7 @@ class SecurityInstrumentation extends NoOpInstrumentation {
 
     // Checking permissions for current retrieved type
     List<String> permissions = PERMISSIONS
-      .find { k, v ->
-        k == '__INSTROSPECTION__' ?
-          parameters.environment.parentType.name.startsWith('__') :
-          k == parameters.environment.parentType.name
-      }?.value
+      .find(this.getPermissions(parameters))?.value
 
     // If if can be accessed anonymously then nothing happens
     if ('ANONYMOUS' in permissions) {
@@ -63,6 +59,14 @@ class SecurityInstrumentation extends NoOpInstrumentation {
       .orElse({ env ->
         throw new I18nException('You Shall Not Pass', 'ERROR.SECURITY.NOT_ALLOWED')
       } as DataFetcher)
+  }
+
+  Closure<Boolean> getPermissions(InstrumentationFieldFetchParameters parameters) {
+    def parentType = parameters.environment.parentType
+
+    return { String key, List<String> permissions ->
+        key == '__INSTROSPECTION__' ? parentType.name.startsWith('__') : key == parentType.name
+    }
   }
 
   String getToken(String authorization) {
