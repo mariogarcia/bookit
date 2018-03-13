@@ -65,4 +65,10 @@ class SecurityService {
       roles: repository.getRoles(user.id)
     ]
   }
+
+  User checkAuthentication(String token) {
+    println "============>${crypto.verifyToken(token)}"
+
+    return new User()
+  }
 }

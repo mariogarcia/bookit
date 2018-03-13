@@ -1,7 +1,7 @@
 package bookit.security
 
 import graphql.execution.instrumentation.NoOpInstrumentation
-
+import javax.inject.Inject
 import java.util.concurrent.CompletableFuture
 import ratpack.handling.Context
 import graphql.schema.DataFetcher
@@ -16,6 +16,14 @@ import gql.exception.I18nException
  * @since 0.1.0
  */
 class SecurityInstrumentation extends NoOpInstrumentation {
+
+  /**
+   * Used to check authentication token
+   *
+   * @since 0.1.0
+   */
+  @Inject
+  SecurityService securityService
 
   /**
    * Tree of Types/Permissions
@@ -46,9 +54,15 @@ class SecurityInstrumentation extends NoOpInstrumentation {
     // If not, user must be authorized
     return context
       .header('Authorization')
+      .map(this.&getToken)
+      .map(securityService.&checkAuthentication)
       .map { dataFetcher }
       .orElse({ env ->
         throw new I18nException('You Shall Not Pass', 'ERROR.SECURITY.NOT_ALLOWED')
       } as DataFetcher)
+  }
+
+  String getToken(String authorization) {
+    return authorization.trim() - 'JWT '
   }
 }
