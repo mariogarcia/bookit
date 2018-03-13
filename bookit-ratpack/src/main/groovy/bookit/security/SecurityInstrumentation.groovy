@@ -31,8 +31,9 @@ class SecurityInstrumentation extends NoOpInstrumentation {
    * @since 0.1.0
    */
   Map<String, List<String>> PERMISSIONS = [
+    __INSTROSPECTION__: ['ANONYMOUS'],
     Query: ['ANONYMOUS'],
-    Login: ['ANONYMOUS']
+    Login: ['ANONYMOUS'],
   ]
 
   @Override
@@ -43,7 +44,9 @@ class SecurityInstrumentation extends NoOpInstrumentation {
     // Checking permissions for current retrieved type
     List<String> permissions = PERMISSIONS
       .find { k, v ->
-        k == parameters.environment.parentType.name
+        k == '__INSTROSPECTION__' ?
+          parameters.environment.parentType.name.startsWith('__') :
+          k == parameters.environment.parentType.name
       }?.value
 
     // If if can be accessed anonymously then nothing happens

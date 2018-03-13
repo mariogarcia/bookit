@@ -66,9 +66,18 @@ class SecurityService {
     ]
   }
 
-  User checkAuthentication(String token) {
-    println "============>${crypto.verifyToken(token)}"
-
-    return new User()
+  /**
+   * Checks whether auth token is valid or not
+   *
+   * @param token found in auth header
+   * @since 0.1.0
+   */
+  Boolean checkAuthentication(String token) {
+    // TODO refactor to get more information
+    // TODO this could throw an exception
+    return Optional
+      .of(crypto.verifyToken(token))
+      .map { true }
+      .orElse(false)
   }
 }
