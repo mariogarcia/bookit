@@ -7,6 +7,7 @@ export default client => ({
           login(credentials: $credentials) {
             token
             name
+            roles
           }
         }
         `

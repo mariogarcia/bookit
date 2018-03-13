@@ -22,6 +22,26 @@ class AppConfig {
   DataSource dataSource
 
   /**
+   * @since 0.1.0
+   */
+  Security security
+
+  /**
+   * Contains security related information
+   *
+   * @since 0.1.0
+   */
+  static class Security {
+
+    /**
+     * Secret used to sign and validate tokens
+     *
+     * @since 0.1.0
+     */
+    String secret
+  }
+
+  /**
    * Contains information about the datasource connection
    *
    * @since 0.1.0

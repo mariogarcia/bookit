@@ -8,4 +8,5 @@ input Credentials {
 type Login {
   token: String
   name: String
+  roles: [String]
 }

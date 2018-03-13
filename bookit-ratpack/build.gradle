@@ -33,6 +33,7 @@ dependencies {
   compile "org.slf4j:slf4j-simple:$slf4j"
   compile "org.postgresql:postgresql:$postgres"
   compile "org.flywaydb:flyway-core:$flyway"
+  compile "com.auth0:java-jwt:$auth0"
 
   testCompile "org.spockframework:spock-core:$spock"
   testCompile "junit:junit:$junit"

@@ -6,3 +6,6 @@ dataSource:
   username: bookit
   password: bookit
   flywaySchemas: public,bookit
+
+security:
+  secret: secret

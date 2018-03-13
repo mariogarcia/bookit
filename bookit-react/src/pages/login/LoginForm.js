@@ -47,6 +47,7 @@ export class LoginForm extends React.Component {
                     <label>Password</label>
                     <Form.Field
                         name='password'
+                        type='password'
                         className='form-control'
                         placeholder='Password' />
                     <Form.Message for='password'/>

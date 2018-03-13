@@ -8,9 +8,9 @@ import { push } from 'react-router-redux'
  *
  * @param credentials required credentials to login
  */
-export function* login(credentials) {
+export function* login(action) {
     try {
-        const apiLogin = yield call(http.security.login, credentials)
+        const apiLogin = yield call(http.security.login, action.credentials)
         const storedLogin = yield call(storage.set, 'login', apiLogin)
 
         yield put(push('/books'))
