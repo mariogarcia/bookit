@@ -14,6 +14,8 @@ import com.auth0.jwt.interfaces.DecodedJWT
  */
 class CryptoService {
 
+  final String ISSUER = 'bookit'
+
   /**
    * Configured algorithm to be used in cryptographic procedures
    *
@@ -26,16 +28,18 @@ class CryptoService {
    * Creates a new token using the provided claim and the configured
    * algorithm
    *
-   * @param issuer claim we want to use to create the token
+   * @param username principal subject
    * @return a new token
    * @since 0.1.0
    */
-  String createToken(String issuer) {
+  String createToken(String username) {
     Algorithm algorithm = algorithmProvider.get()
 
     return JWT
       .create()
-      .withIssuer(issuer)
+      .withIssuer(ISSUER)
+      .withSubject(username)
+      .withIssuedAt(new Date())
       .sign(algorithm)
   }
 
@@ -51,6 +55,7 @@ class CryptoService {
 
     return JWT
       .require(algorithm)
+      .withIssuer(ISSUER)
       .build()
       .verify(token)
   }

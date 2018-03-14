@@ -47,22 +47,30 @@ class SecurityRepository {
   /**
    * Retrieves all role names of a given user
    *
-   * @param uuid user id
+   * @param username user username
    * @return a list of role names
    * @since 0.1.0
    */
-  List<String> getRoles(String uuid) {
+  List<String> getRoles(String username) {
     String query = '''
       SELECT
-        role.rolename as rolename
-      FROM bookit.app_role role JOIN bookit.app_user_role user_role ON
-        role.id = user_role.role_id
+        r.rolename
+      FROM
+        app_user u
+      JOIN
+        app_user_role ur
+      ON
+        u.id = ur.user_id
+      JOIN
+        app_role r
+      ON
+        r.id = ur.role_id
       WHERE
-        user_role.user_id = ?::uuid
+        u.username = ?
     '''
 
     return sql
-      .rows(query, uuid)
+      .rows(query, username)
       .rolename as List<String>
   }
 }

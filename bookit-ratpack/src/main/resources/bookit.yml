@@ -9,3 +9,12 @@ dataSource:
 
 security:
   secret: secret
+  auth:
+    rules:
+      instrospection:
+      - ANONYMOUS
+      Query:
+        login:
+          - ANONYMOUS
+        books:
+          - USER

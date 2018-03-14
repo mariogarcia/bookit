@@ -39,6 +39,12 @@ class AppConfig {
      * @since 0.1.0
      */
     String secret
+
+    Auth auth
+
+    static class Auth {
+      Map<String,?> rules
+    }
   }
 
   /**
