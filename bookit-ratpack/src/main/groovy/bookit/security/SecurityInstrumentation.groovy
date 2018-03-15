@@ -1,18 +1,15 @@
 package bookit.security
 
-import graphql.execution.instrumentation.NoOpInstrumentation
 import javax.inject.Inject
-import java.util.concurrent.CompletableFuture
 import ratpack.handling.Context
 import graphql.schema.DataFetcher
 import graphql.schema.DataFetchingEnvironment
-import graphql.language.SourceLocation
 import graphql.schema.GraphQLType
 import graphql.schema.GraphQLFieldDefinition
+import graphql.language.SourceLocation
 import graphql.execution.ExecutionPath
-import graphql.execution.instrumentation.parameters.InstrumentationFieldFetchParameters
 import graphql.execution.instrumentation.NoOpInstrumentation
-import bookit.security.DefaultError
+import graphql.execution.instrumentation.parameters.InstrumentationFieldFetchParameters
 
 /**
  * Naive authorization mechanism based on `graphql-java`
