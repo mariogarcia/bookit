@@ -41,6 +41,13 @@ class SecurityRepository {
                             username: username,
                             password: password)
 
+    return Optional
+      .ofNullable(user)
+      .map(this.&mapToUser)
+      .orElse(null) as User
+  }
+
+  User mapToUser(Map user) {
     return new User(id: user.id, username: user.username)
   }
 

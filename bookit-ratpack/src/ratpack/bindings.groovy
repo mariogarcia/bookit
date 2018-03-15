@@ -8,6 +8,7 @@ import bookit.init.Module as InitModule
 import bookit.graphql.Module as SchemaModule
 import bookit.books.Module as BooksModule
 import bookit.security.Module as SecurityModule
+import bookit.instrumentation.Module as InstrumentationModule
 
 ratpack {
   bindings {
@@ -18,5 +19,6 @@ ratpack {
     module InitModule
     module BooksModule
     module SecurityModule
+    module InstrumentationModule
   }
 }

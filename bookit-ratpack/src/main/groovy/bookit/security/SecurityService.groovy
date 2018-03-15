@@ -1,9 +1,12 @@
 package bookit.security
 
 import javax.inject.Inject
+import graphql.GraphQLError
 import graphql.schema.DataFetchingEnvironment
 import com.auth0.jwt.interfaces.DecodedJWT
 import bookit.config.AppConfig
+import io.vavr.control.Option
+import io.vavr.control.Either
 
 /**
  * Service responsible to check application security
@@ -39,7 +42,7 @@ class SecurityService {
    * @return a map with expected fields
    * @since 0.1.0
    */
-  Map login(DataFetchingEnvironment env) {
+  Either<GraphQLError, Map> login(DataFetchingEnvironment env) {
     Map<String, String> credentials = env
       .arguments
       .credentials as Map<String, String>
@@ -49,10 +52,18 @@ class SecurityService {
 
     User user = repository.login(username, password)
 
-    return Optional
-      .ofNullable(user)
+    return Option
+      .of(user)
       .map(this.&createPayload)
-      .orElse([:])
+      .toEither(buildLoginError())
+  }
+
+  GraphQLError buildLoginError() {
+    return new DefaultError(
+      message: 'Invalid Credentials',
+      extensions: [
+        i18n: 'ERROR.AUTH.INVALID'
+      ] as Map)
   }
 
   /*

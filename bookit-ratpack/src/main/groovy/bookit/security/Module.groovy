@@ -19,6 +19,5 @@ class Module extends AbstractModule {
     bind(CryptoService).in(Scopes.SINGLETON)
     bind(SecurityService).in(Scopes.SINGLETON)
     bind(SecurityRepository).in(Scopes.SINGLETON)
-    bind(SecurityInstrumentation).in(Scopes.SINGLETON)
   }
 }

@@ -10,6 +10,8 @@ import graphql.language.SourceLocation
 import graphql.execution.ExecutionPath
 import graphql.execution.instrumentation.NoOpInstrumentation
 import graphql.execution.instrumentation.parameters.InstrumentationFieldFetchParameters
+import groovy.util.logging.Slf4j
+import groovy.transform.TupleConstructor
 
 /**
  * Naive authorization mechanism based on `graphql-java`
@@ -17,18 +19,16 @@ import graphql.execution.instrumentation.parameters.InstrumentationFieldFetchPar
  *
  * @since 0.1.0
  */
+@Slf4j
+@TupleConstructor
 class SecurityInstrumentation extends NoOpInstrumentation {
 
-  /**
-   * Used to check authentication token
-   *
-   * @since 0.1.0
-   */
-  @Inject
   SecurityService securityService
 
   @Override
   DataFetcher<?> instrumentDataFetcher(DataFetcher<?> dataFetcher, InstrumentationFieldFetchParameters params) {
+    log.debug('Instrumenting DataFetcher to check security constraints')
+
     DataFetchingEnvironment environment = params.environment
     Context context = environment.context as Context
     GraphQLType parentType = environment.parentType
