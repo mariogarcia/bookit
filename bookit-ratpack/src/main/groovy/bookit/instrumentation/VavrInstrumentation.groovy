@@ -3,19 +3,15 @@ package bookit.instrumentation
 import javax.inject.Inject
 import groovy.util.logging.Slf4j
 import ratpack.handling.Context
+import io.vavr.control.Option
+import io.vavr.control.Either
 import graphql.GraphQLError
 import graphql.schema.DataFetcher
 import graphql.schema.DataFetchingEnvironment
-import graphql.schema.GraphQLType
-import graphql.schema.GraphQLFieldDefinition
-import graphql.language.SourceLocation
 import graphql.execution.ExecutionPath
 import graphql.execution.ExecutionContext
 import graphql.execution.instrumentation.NoOpInstrumentation
 import graphql.execution.instrumentation.parameters.InstrumentationFieldFetchParameters
-
-import io.vavr.control.Option
-import io.vavr.control.Either
 
 /**
  * This instrumentation makes possible to use VAVR {@link Either} type
