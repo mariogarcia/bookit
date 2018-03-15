@@ -8,13 +8,17 @@ import graphql.execution.instrumentation.Instrumentation
 import graphql.execution.instrumentation.ChainedInstrumentation
 
 /**
+ * Provides a SINGLETON instance of the chain of instrumentations used
+ * in the application GraphQL engine.
+ *
+ * NOTE: The Order in which you add the instrumentations is important
  *
  * @since 0.1.0
  */
 class InstrumentationProvider implements Provider<Instrumentation> {
 
   /**
-   * Used to check authentication token
+   * Required for the {@link SecurityService}
    *
    * @since 0.1.0
    */
