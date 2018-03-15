@@ -1,4 +1,4 @@
-package bookit.security
+package bookit.common
 
 import graphql.ErrorType
 import graphql.GraphQLError

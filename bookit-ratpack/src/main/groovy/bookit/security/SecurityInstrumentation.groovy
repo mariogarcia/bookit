@@ -12,6 +12,7 @@ import graphql.execution.instrumentation.NoOpInstrumentation
 import graphql.execution.instrumentation.parameters.InstrumentationFieldFetchParameters
 import groovy.util.logging.Slf4j
 import groovy.transform.TupleConstructor
+import bookit.common.DefaultError
 
 /**
  * Naive authorization mechanism based on `graphql-java`

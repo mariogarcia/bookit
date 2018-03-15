@@ -5,6 +5,7 @@ import graphql.GraphQLError
 import graphql.schema.DataFetchingEnvironment
 import com.auth0.jwt.interfaces.DecodedJWT
 import bookit.config.AppConfig
+import bookit.common.DefaultError
 import io.vavr.control.Option
 import io.vavr.control.Either
 
