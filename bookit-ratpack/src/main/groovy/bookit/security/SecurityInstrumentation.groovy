@@ -6,11 +6,13 @@ import java.util.concurrent.CompletableFuture
 import ratpack.handling.Context
 import graphql.schema.DataFetcher
 import graphql.schema.DataFetchingEnvironment
+import graphql.language.SourceLocation
 import graphql.schema.GraphQLType
 import graphql.schema.GraphQLFieldDefinition
+import graphql.execution.ExecutionPath
 import graphql.execution.instrumentation.parameters.InstrumentationFieldFetchParameters
 import graphql.execution.instrumentation.NoOpInstrumentation
-import gql.exception.I18nException
+import bookit.security.DefaultError
 
 /**
  * Naive authorization mechanism based on `graphql-java`
@@ -45,18 +47,33 @@ class SecurityInstrumentation extends NoOpInstrumentation {
       .flatMap(securityService.&checkAuthentication)
       .filter(securityService.checkAuthorization(parentType.name, fieldDefinition.name))
       .map { dataFetcher }
-      .orElse(notAuthorized())
+      .orElse(notAuthorized(params))
   }
 
   /**
    * Returns a {@link DataFetcher} which raises a security exception
    *
+   * @params parameters of the current execution
    * @return a {@link DataFetcher} raising an {@link I18nException}
    * @since 0.1.0
    */
-  DataFetcher notAuthorized() {
+  DataFetcher notAuthorized(InstrumentationFieldFetchParameters params) {
     return { DataFetchingEnvironment env ->
-      throw new I18nException('You Shall Not Pass', 'ERROR.SECURITY.NOT_ALLOWED')
+      SourceLocation sourceLocation = env.getFields()?.find()?.getSourceLocation()
+      ExecutionPath path = env.getFieldTypeInfo()?.getPath()
+      DefaultError error = [
+        message: 'Forbidden Resource',
+        extensions: [
+          i18n:'ERROR.SECURITY.FORBIDDEN'
+        ] as Map<String, Object>,
+        locations:[sourceLocation]
+      ] as DefaultError
+
+      params
+        .getExecutionContext()
+        .addError(error as graphql.GraphQLError, path)
+
+      return null
     } as DataFetcher
   }
 
