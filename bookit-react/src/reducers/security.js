@@ -7,7 +7,8 @@ export const actionTypes = {
     LOGIN: {
         REQUEST: '@bookit/LOGIN/REQUEST',
         SUCCESS: '@bookit/LOGIN/SUCCESS',
-        FAILURE: '@bookit/LOGIN/FAILURE'
+        FAILURE: '@bookit/LOGIN/FAILURE',
+        BAD_CREDENTIALS: '@bookit/LOGIN/BAD_CREDENTIALS'
     }
 }
 
@@ -39,6 +40,11 @@ const loginReducer = (state = initialState, action) => {
             .set('isLoading', false)
             .set('error', action.error)
 
+    case actionTypes.LOGIN.BAD_CREDENTIALS:
+        return state
+            .set('isLoading', false)
+            .set('error', 'Bad credentials!')
+
     default:
         return state
     }
@@ -58,6 +64,11 @@ export const actionCreators = {
         return {
             type: actionTypes.LOGIN.SUCCESS,
             login
+        }
+    },
+    badCredentials: () => {
+        return {
+            type: actionTypes.LOGIN.BAD_CREDENTIALS
         }
     },
     loginFailure: (error) => {

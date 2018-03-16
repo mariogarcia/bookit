@@ -11,14 +11,18 @@ import { push } from 'react-router-redux'
 export function* login(action) {
     try {
         const apiLogin = yield call(http.security.login, action.credentials)
-        const storedLogin = yield call(storage.set, 'login', apiLogin)
 
-        yield put(push('/books'))
-        yield put(actionCreators.loginSuccess(storedLogin))
+        if (apiLogin) {
+            const storedLogin = yield call(storage.set, 'login', apiLogin)
+            yield put(push('/books'))
+            yield put(actionCreators.loginSuccess(storedLogin))
+        } else {
+            yield put(actionCreators.badCredentials())
+        }
+
     } catch (err) {
         const error = err.code || err
         yield put(actionCreators.loginFailure(error))
-        yield put(push('/login'))
     }
 }
 

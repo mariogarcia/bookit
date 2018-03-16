@@ -12,14 +12,19 @@ const LoginPage = (props) => (
     <LoginLayout>
         <div className="login-form">
             <h4>Login</h4>
-            <LoginForm onSubmit={props.login} />
+            <LoginForm
+                error={props.error}
+                onSubmit={props.login} />
         </div>
     </LoginLayout>
 )
 
-const mapStateToProps = (state) => ({
-    login: state.security.get('login')
-})
+const mapStateToProps = (state) => {
+    return {
+        login: state.security.get('login'),
+        error: state.security.get('error')
+    }
+}
 
 const mapDispatchToProps = (dispatch) => ({
     ...bindActionCreators(loginActionCreators, dispatch)

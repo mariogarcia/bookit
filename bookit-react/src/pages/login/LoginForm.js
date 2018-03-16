@@ -13,6 +13,19 @@ const validation = yup.object({
 })
 
 /**
+ * Renders a general error message
+ *
+ * @since 0.1.0
+ */
+const ErrorMessage = (props) => {
+    if (!props.error) {
+        return (<div></div>)
+    }
+
+    return (<div className="alert alert-danger">{props.error}</div>)
+}
+
+/**
  * Renders a login form
  *
  * @since 0.1.0
@@ -52,6 +65,7 @@ export class LoginForm extends React.Component {
                         placeholder='Password' />
                     <Form.Message for='password'/>
                 </div>
+                <ErrorMessage error={this.props.error} />
                 <Form.Button
                     className="btn btn-primary btn-flat m-b-30 m-t-30"
                     type='submit'>Sign in</Form.Button>
