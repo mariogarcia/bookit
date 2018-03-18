@@ -16,3 +16,10 @@
     color: red;
     opacity: 1;
 }
+
+div.card-actions {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 1rem;
+}
