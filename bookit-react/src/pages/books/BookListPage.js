@@ -4,8 +4,8 @@ import { bindActionCreators } from 'redux'
 import { Link } from 'react-router-dom'
 import { BookList } from './BookList'
 import { Page, Actions, Content } from '../../components/page'
-import { MainLayout } from '../../layouts/MainLayout'
 import { actionCreators as booksActionCreators } from '../../reducers/books'
+import MainLayout from '../../layouts/MainLayout'
 
 import './BookListPage.css'
 

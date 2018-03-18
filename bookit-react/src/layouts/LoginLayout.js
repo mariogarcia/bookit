@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './MainLayout.css'
+import './bootstrap.min.css'
 import './style.css'
 import './helper.css'
 

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Page, Content } from '../../components/page'
-import { MainLayout } from '../../layouts/MainLayout'
+import MainLayout from '../../layouts/MainLayout'
 
 /**
  * Shows a list of links
