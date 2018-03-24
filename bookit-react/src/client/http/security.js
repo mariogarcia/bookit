@@ -21,7 +21,14 @@ export default client => ({
 
         return client
             .post('', { query, variables })
-            .then(resp => resp.data.getIn(['data', 'login']))
+            .then(resp => {
+                const login = resp.data.getIn(['data', 'login'])
+                const token = login.get('token')
+
+                client.defaults.headers.common['Authorization'] = `JWT ${token}`;
+
+                return login
+            })
             .catch(parseError)
     }
 })

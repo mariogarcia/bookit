@@ -22,8 +22,7 @@ const getToken = () => {
 export const client = axios.create({
     headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': `JWT ${getToken()}`
+        'Accept': 'application/json'
     },
     baseURL: 'http://localhost:8888/graphql',
     transformResponse: [ (data) => {
