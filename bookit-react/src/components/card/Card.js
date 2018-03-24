@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import './Card.css'
 
 const createReductor = size => text => {
-    return `${text.substring(0, size)}...`
+    return text && `${text.substring(0, size)}...`
 }
 
 const reduce = createReductor(100)
