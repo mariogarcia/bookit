@@ -17,12 +17,16 @@ const getToken = () => {
 }
 
 /**
- * Default http client
+ * Default http client. Authorization header is calling
+ * getToken(). That will only work if the user was already
+ * successfully authenticated and there is still the login information
+ * in the local storage.
  */
 export const client = axios.create({
     headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        'Authorization': `JWT ${getToken()}`
     },
     baseURL: 'http://localhost:8888/graphql',
     transformResponse: [ (data) => {
