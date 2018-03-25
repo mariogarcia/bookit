@@ -9,12 +9,23 @@ services:
     build: ./docker/dev/db-client
     image: github.com/mariogarcia/bookit-db-client
 
+  neo4j:
+    image: neo4j:3.3
+    volumes:
+      - $HOME/neo4j/data:/data
+    ports:
+      - 7474:7474
+      - 7687:7687
+    environment:
+      - NEO4J_AUTH=neo4j/neo
+
   dev:
     build: ./docker/dev
     image: github.com/mariogarcia/bookit-dev
     links:
       - db
       - db-client
+      - neo4j
     volumes:
       - $PWD:/home/dev/ws
       - $HOME/.m2:/home/dev/.m2
