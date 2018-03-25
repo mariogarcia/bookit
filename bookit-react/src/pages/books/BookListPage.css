@@ -3,11 +3,11 @@ div.card-body {
     flex-wrap: wrap;
 }
 
-div.card {
-    width: 16rem;
+.card-books div.card {
+    width: 12rem;
     margin-right: 2em;
 }
 
-div.card img {
-    height: 19rem;
+.card-books div.card img {
+    height: 14rem;
 }

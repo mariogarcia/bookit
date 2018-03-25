@@ -18,14 +18,14 @@ export class BookList extends React.Component {
                     key={index}
                     image={book.get('imageUri')}
                     title={book.get('title')}
-                    text={book.get('shortDescription')}
+
                     detailLink={detailLink}
                     deleteLink={deleteLink}
                     buttonText='Details' />
         ))
 
         return (
-            <div className='card-body'>
+            <div className='card-body card-books'>
                 { books }
             </div>
         )

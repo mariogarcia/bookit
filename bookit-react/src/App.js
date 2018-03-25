@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import { LinkListPage } from './pages/links/LinkListPage'
-import BookListPage from './pages/books/BookListPage'
-import LoginPage from './pages/login/LoginPage'
-import Auth from './components/security'
 import { Switch, Route, Redirect } from 'react-router-dom'
 import { LocalStorage } from './client/storage/LocalStorage'
+import LoginPage from './pages/login/LoginPage'
+import DashboardPage from './pages/dashboard/DashboardPage'
+import LanguageListPage from './pages/languages/LanguageListPage'
+import BookListPage from './pages/books/BookListPage'
+import AuthorListPage from './pages/authors/AuthorListPage'
+import BartoloListPage from './pages/bartolos/BartoloListPage'
+import Auth from './components/security'
 
 class App extends Component {
 
@@ -17,8 +20,11 @@ class App extends Component {
 
       return (
           <Switch>
-              <Route exact path='/books' render={Secured(BookListPage)} />
-              <Route path='/links' component={Secured(LinkListPage)} />
+              <Route exact path='/' render={Secured(DashboardPage)} />
+              <Route path='/books' render={Secured(BookListPage)} />
+              <Route path='/bartolos' component={Secured(BartoloListPage)} />
+              <Route path='/authors' render={Secured(AuthorListPage)} />
+              <Route path='/languages' render={Secured(LanguageListPage)} />
               <Route path='/login' component={LoginPage} />
           </Switch>
       );

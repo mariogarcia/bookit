@@ -4,18 +4,20 @@ import { Page, Content } from '../../components/page'
 import MainLayout from '../../layouts/MainLayout'
 
 /**
- * Shows a list of links
+ * Shows a list of Languages
  *
  * @since 0.1.0
  */
-export const LinkListPage = (props) => (
+const LanguageListPage = (props) => (
     <MainLayout>
-        <Page title='Links'>
+        <Page title='Languages'>
             <Content>
                 <div className="card">
-                    <div className="card-body"> List of links. </div>
+                    <div className="card-body"> List of Languages. </div>
                 </div>
             </Content>
         </Page>
     </MainLayout>
 )
+
+export default LanguageListPage
