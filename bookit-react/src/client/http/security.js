@@ -1,6 +1,6 @@
 import { parseError } from './utils'
 
-export default client => ({
+export default (client) => ({
     login ({username, password}) {
         const query = `
         query Login($credentials: Credentials!) {
@@ -11,24 +11,20 @@ export default client => ({
           }
         }
         `
-        const variables = {
-            clientMutationId: 'login',
-            credentials: {
-                username,
-                password
+        const data = {
+            query,
+            variables: {
+                clientMutationId: 'login',
+                credentials: {
+                    username,
+                    password
+                }
             }
         }
 
         return client
-            .post('', { query, variables })
-            .then(resp => {
-                const login = resp.data.getIn(['data', 'login'])
-                const token = login.get('token')
-
-                client.defaults.headers.common['Authorization'] = `JWT ${token}`;
-
-                return login
-            })
+            .post('', data)
+            .then(resp => resp.data.getIn(['data', 'login']))
             .catch(parseError)
     }
 })

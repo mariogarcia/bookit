@@ -1,6 +1,7 @@
 import { parseError } from './utils'
+import storage from '../storage'
 
-export default client => ({
+export default (client, headers) => ({
     list () {
         const query = `
         query BookList($offset: Int, $maxRows: Int) {
@@ -11,14 +12,17 @@ export default client => ({
           }
         }
         `
-        const variables = {
-            clientMutationId: 'list-books',
-            offset: 1,
-            maxRows: 20
+        const data = {
+            query,
+            variables: {
+                clientMutationId: 'list-books',
+                offset: 1,
+                maxRows: 20
+            }
         }
 
         return client
-            .post('', { query, variables })
+            .post('', data, headers())
             .then(resp => resp.data.getIn(['data', 'books']))
             .catch(parseError)
     }
