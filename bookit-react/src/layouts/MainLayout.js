@@ -6,9 +6,10 @@ import { Header } from './Header'
 import { Sidebar } from './Sidebar'
 import { actionCreators as uiActionCreators } from '../reducers/ui'
 
+import './bootstrap.min.css'
 import './style.css'
 import './helper.css'
-import './bootstrap.min.css'
+
 
 class MainLayout extends React.Component {
 
