@@ -11,6 +11,7 @@ import storage from '../storage'
  * successfully authenticated and there is still the login information
  * in the local storage.
  */
+
 export const client = axios.create({
     headers: {
         'Content-Type': 'application/json',
@@ -22,21 +23,32 @@ export const client = axios.create({
     }]
 })
 
-const createAuthHeaders = (extraHeaders = {}) => {
-    const token = storage.get('login').token
+const ok = (config) => {
+    const login = storage.get('login')
+    let token
+
+    if (login) {
+        token = login.token
+    }
 
     return {
+        ...config,
         headers: {
-            ...extraHeaders,
             Authorization: `JWT ${token}`
         }
     }
 }
 
+const ko = (err) => {
+    return Promise.reject(err)
+}
+
+client.interceptors.request.use(ok, ko)
+
 /**
  * Exports all available http clients
  */
 export default {
-    books: books(client, createAuthHeaders),
+    books: books(client),
     security: security(client)
 }

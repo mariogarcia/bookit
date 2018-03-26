@@ -1,7 +1,7 @@
 import { parseError } from './utils'
 import storage from '../storage'
 
-export default (client, headers) => ({
+export default (client) => ({
     list () {
         const query = `
         query BookList($offset: Int, $maxRows: Int) {
@@ -22,7 +22,7 @@ export default (client, headers) => ({
         }
 
         return client
-            .post('', data, headers())
+            .post('', data)
             .then(resp => resp.data.getIn(['data', 'books']))
             .catch(parseError)
     }
