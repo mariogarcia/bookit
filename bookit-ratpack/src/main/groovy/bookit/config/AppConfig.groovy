@@ -26,6 +26,8 @@ class AppConfig {
    */
   Security security
 
+  Neo neo
+
   /**
    * Contains security related information
    *
@@ -45,6 +47,13 @@ class AppConfig {
     static class Auth {
       Map<String,?> rules
     }
+  }
+
+  static class Neo {
+
+    String uri
+    String username
+    String password
   }
 
   /**

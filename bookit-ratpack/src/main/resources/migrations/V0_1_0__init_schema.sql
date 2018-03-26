@@ -1,22 +1,5 @@
 CREATE SCHEMA IF NOT EXISTS bookit;
 
-CREATE TABLE bookit.author(
-  id UUID PRIMARY KEY,
-  created timestamp,
-  name varchar(255)
-);
-
-CREATE TABLE bookit.book(
-  id UUID PRIMARY KEY,
-  created timestamp,
-  published date,
-  title varchar(255),
-  image_uri varchar(255),
-  short_description varchar(255),
-  author_id UUID,
-  FOREIGN KEY (author_id) REFERENCES bookit.author(id)
-);
-
 CREATE TABLE bookit.app_user(
   id UUID PRIMARY KEY,
   created timestamp,

@@ -2,6 +2,8 @@ package bookit.books
 
 import groovy.sql.Sql
 import javax.inject.Inject
+import org.neo4j.driver.v1.Session
+import org.neo4j.driver.v1.Record
 
 /**
  * Repository responsible to access book related data from the
@@ -12,12 +14,12 @@ import javax.inject.Inject
 class BookRepository {
 
   /**
-   * Database access
+   * Graph database access
    *
    * @since 0.1.0
    */
   @Inject
-  Sql sql
+  Session session
 
   /**
    * Returns a list of related information about books
@@ -26,18 +28,11 @@ class BookRepository {
    * @since 0.1.0
    */
   List<Map> list(Integer offset, Integer maxRows) {
-    String query = '''
-      SELECT
-        id,
-        created,
-        published,
-        title,
-        image_uri as imageUri,
-        short_description as shortDescription,
-        author_id as authorId
-      FROM book
-    '''
-
-    return sql.rows(query, offset, maxRows) as List<Map>
+    return session
+      .run('MATCH (book:Book) RETURN book')
+      .list()
+      .collect { Record record ->
+        record.asMap()
+      }
   }
 }

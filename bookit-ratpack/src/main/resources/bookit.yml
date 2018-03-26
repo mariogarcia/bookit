@@ -7,6 +7,11 @@ dataSource:
   password: bookit
   flywaySchemas: public,bookit
 
+neo:
+  username: neo4j
+  password: neo
+  uri: bolt://neo4j:7687
+
 security:
   secret: secret
   auth:
