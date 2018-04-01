@@ -70,4 +70,39 @@ class BookCypherSpec extends Neo4jSpec {
     and: 'there should be no more results'
     !result.hasNext()
   }
+
+  void 'create two books shared by one of the authors'() {
+    given: 'creation query'
+    def create = '''
+       CREATE
+         (author1:Author {name: "John"}),
+         (author2:Author {name: "Pete"}),
+         (book1:Book {title: "Book1"}),
+         (book2:Book {title: "Book2"}),
+         (author1)-[:WROTE]->(book1),
+         (author2)-[:WROTE]->(book1),
+         (author2)-[:WROTE]->(book2)
+    '''
+
+    def getOtherBook = '''
+    MATCH
+      (author:Author {name: "John"}),
+      (book:Book {title: "Book1"}),
+      (otherBooks:Book)<-[:WROTE]-(others)-[:WROTE]->(book)<-[:WROTE]-(author)
+    RETURN
+      otherBooks.title as title
+    '''
+
+    when: 'executing the creation query'
+    service.execute(create)
+
+    and: 'the checking query'
+    def result = service.execute(getOtherBook)
+
+    then: 'we should get the other book written by other authors'
+    result.first().title == 'Book2'
+
+    and: 'there should be no more resuls'
+    !result.hasNext()
+  }
 }
