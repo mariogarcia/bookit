@@ -1,6 +1,6 @@
 package bookit.books
 
-import bookit.neo4j.Neo4jSpec
+import bookit.test.Neo4jSpec
 import org.neo4j.graphdb.Result
 
 class BookCypherSpec extends Neo4jSpec {

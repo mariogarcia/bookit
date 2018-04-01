@@ -28,19 +28,40 @@ class BookRepository {
    * @since 0.1.0
    */
   List<Map> list(Integer offset, Integer maxRows) {
-    String query = """
-     MATCH (book:Book)
-     RETURN
-         book.title as title,
-         book.thumbnail as imageUri
-     ORDER BY book.year DESC
-    """
-
     return session
-      .run(query)
+      .run(listQuery)
       .list()
       .collect { Record record ->
         record.asMap()
       }
+  }
+
+  /**
+   * Query string representing a list of books
+   *
+   * @return a query string
+   * @since 0.1.0
+   */
+  String getListQuery() {
+    return '''
+    MATCH (book:Book)
+    RETURN
+      book.title as title,
+      book.thumbnail as imageUri
+    ORDER BY book.year DESC
+    '''
+  }
+
+  Integer countBooks() {
+    return session
+      .run(countBooksQuery)
+      .single()
+      .get('no') as Integer
+  }
+
+  String getCountBooksQuery() {
+    return '''
+    MATCH (b:Book) RETURN count(b) as no
+    '''
   }
 }
