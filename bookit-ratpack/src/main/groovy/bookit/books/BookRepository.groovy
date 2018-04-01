@@ -28,8 +28,16 @@ class BookRepository {
    * @since 0.1.0
    */
   List<Map> list(Integer offset, Integer maxRows) {
+    String query = """
+     MATCH (book:Book)
+     RETURN
+         book.title as title,
+         book.thumbnail as imageUri
+     ORDER BY book.year DESC
+    """
+
     return session
-      .run('MATCH (book:Book) RETURN book')
+      .run(query)
       .list()
       .collect { Record record ->
         record.asMap()
