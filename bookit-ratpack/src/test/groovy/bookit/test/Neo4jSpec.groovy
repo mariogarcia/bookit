@@ -15,10 +15,6 @@ class Neo4jSpec extends Specification {
     service = new TestGraphDatabaseFactory().newImpermanentDatabase(new File("build/test/neo4j"))
   }
 
-  Result execute(String query) {
-    return service.execute(query)
-  }
-
   void cleanup() {
     service.shutdown()
   }

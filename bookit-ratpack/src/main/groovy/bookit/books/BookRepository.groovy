@@ -31,9 +31,7 @@ class BookRepository {
     return session
       .run(listQuery)
       .list()
-      .collect { Record record ->
-        record.asMap()
-      }
+      .collect(this.&toMap)
   }
 
   /**
@@ -52,6 +50,12 @@ class BookRepository {
     '''
   }
 
+  /**
+   * Returns the number of available books in the database
+   *
+   * @return the number of books found in db
+   * @since 0.1.0
+   */
   Integer countBooks() {
     return session
       .run(countBooksQuery)
@@ -59,9 +63,56 @@ class BookRepository {
       .get('no') as Integer
   }
 
+  /**
+   * Query string to get the number of books
+   *
+   * @return the query string
+   * @since 0.1.0
+   */
   String getCountBooksQuery() {
     return '''
     MATCH (b:Book) RETURN count(b) as no
     '''
+  }
+
+  /**
+   * Lists all books by a given author
+   *
+   * @param authorName the name of the author
+   * @return a list of book nodes
+   * @since 0.1.0
+   */
+  List<Map> findAllByAuthorName(String authorName) {
+    return session
+      .run(booksByAuthorNameQuery)
+      .list()
+      .collect(this.&toMap)
+  }
+
+  /**
+   * Query string to get a list of books by the name of the author
+   *
+   * @return the query string
+   * @since 0.1.0
+   */
+  String getBooksByAuthorNameQuery() {
+    return '''
+    MATCH
+      (author:Author {name: $name}),
+      (books:Book)<-[:WROTE]-(author)
+    RETURN
+      books
+    '''
+  }
+
+  /**
+   * Converts a given record to a map of properties
+   *
+   * @param record the record to convert
+   * @return a map
+   * @since 0.1.0
+   */
+  Map toMap(Record record) {
+    return record.asMap()
   }
 }
