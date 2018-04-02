@@ -1,6 +1,5 @@
 package bookit.books
 
-import groovy.sql.Sql
 import javax.inject.Inject
 import org.neo4j.driver.v1.Session
 import org.neo4j.driver.v1.Record
@@ -27,6 +26,7 @@ class BookRepository {
    * @return a list of books
    * @since 0.1.0
    */
+  @SuppressWarnings('UnusedMethodParameter')
   List<Map> list(Integer offset, Integer maxRows) {
     return session
       .run(listQuery)
@@ -84,7 +84,7 @@ class BookRepository {
    */
   List<Map> findAllByAuthorName(String authorName) {
     return session
-      .run(booksByAuthorNameQuery)
+      .run(booksByAuthorNameQuery, [name: authorName] as Map<String, Object>)
       .list()
       .collect(this.&toMap)
   }

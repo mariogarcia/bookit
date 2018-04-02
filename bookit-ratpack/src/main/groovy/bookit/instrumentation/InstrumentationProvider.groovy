@@ -29,7 +29,7 @@ class InstrumentationProvider implements Provider<Instrumentation> {
   Instrumentation get() {
     List<Instrumentation> instrumentations = [
       new SecurityInstrumentation(securityService),
-      new VavrInstrumentation()
+      new VavrInstrumentation(),
     ] as List<Instrumentation>
 
     return new ChainedInstrumentation(instrumentations)

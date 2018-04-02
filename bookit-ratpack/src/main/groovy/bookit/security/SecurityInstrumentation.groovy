@@ -1,6 +1,5 @@
 package bookit.security
 
-import javax.inject.Inject
 import ratpack.handling.Context
 import graphql.schema.DataFetcher
 import graphql.schema.DataFetchingEnvironment
@@ -64,7 +63,7 @@ class SecurityInstrumentation extends NoOpInstrumentation {
         extensions: [
           i18n:'ERROR.SECURITY.FORBIDDEN'
         ] as Map<String, Object>,
-        locations:[sourceLocation]
+        locations:[sourceLocation],
       ] as DefaultError
 
       params

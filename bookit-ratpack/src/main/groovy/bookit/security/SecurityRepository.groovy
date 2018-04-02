@@ -39,7 +39,7 @@ class SecurityRepository {
 
     Map user = sql.firstRow(query,
                             username: username,
-                            password: password)
+                            password: password,)
 
     return Optional
       .ofNullable(user)

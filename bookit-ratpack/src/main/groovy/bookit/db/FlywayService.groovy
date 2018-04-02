@@ -23,6 +23,7 @@ class FlywayService implements Service {
   @Inject
   AppConfig appConfig
 
+  @SuppressWarnings('UnusedMethodParameter')
   void onStart(StartEvent startEvent) {
     log.info('Flyway: starts')
 

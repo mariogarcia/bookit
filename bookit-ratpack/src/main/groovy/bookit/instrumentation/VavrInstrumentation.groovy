@@ -1,8 +1,6 @@
 package bookit.instrumentation
 
-import javax.inject.Inject
 import groovy.util.logging.Slf4j
-import ratpack.handling.Context
 import io.vavr.control.Option
 import io.vavr.control.Either
 import graphql.GraphQLError
@@ -36,12 +34,13 @@ class VavrInstrumentation extends NoOpInstrumentation {
   static final DataFetcher<?> EMPTY_DATA_FETCHER = { DataFetchingEnvironment env -> null } as DataFetcher<?>
 
   @Override
-  public DataFetcher<?> instrumentDataFetcher(DataFetcher<?> dataFetcher, InstrumentationFieldFetchParameters parameters) {
+  public DataFetcher<?> instrumentDataFetcher(
+    DataFetcher<?> dataFetcher,
+    InstrumentationFieldFetchParameters parameters) {
     log.debug('Instrumenting DataFetcher to intercept Vavr Either return types')
 
     DataFetchingEnvironment environment = parameters.getEnvironment()
     ExecutionContext executionContext = parameters.getExecutionContext()
-    ExecutionPath path = environment.getFieldTypeInfo()?.getPath()
     Object o = dataFetcher.get(environment)
 
     return Option
@@ -53,7 +52,7 @@ class VavrInstrumentation extends NoOpInstrumentation {
 
   Closure<Option<?>> handleResult(ExecutionContext executionContext) {
     return { Object o ->
-      switch(o) {
+      switch (o) {
         case Either:
           return handleEither(executionContext, o as Either)
         default:
@@ -65,7 +64,7 @@ class VavrInstrumentation extends NoOpInstrumentation {
   Option handleEither(ExecutionContext executionContext, Either either) {
     return either
       .peekLeft { Object o ->
-        switch(o) {
+        switch (o) {
           case GraphQLError:
             executionContext.addError(o as GraphQLError, ExecutionPath.rootPath())
             return

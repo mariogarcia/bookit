@@ -16,6 +16,8 @@ import io.vavr.control.Either
  */
 class SecurityService {
 
+  static final String ROLE_ANONYMOUS = 'ANONYMOUS'
+
   /**
    * Accesses persisted security information
    *
@@ -63,7 +65,7 @@ class SecurityService {
     return new DefaultError(
       message: 'Invalid Credentials',
       extensions: [
-        i18n: 'ERROR.AUTH.INVALID'
+        i18n: 'ERROR.AUTH.INVALID',
       ] as Map)
   }
 
@@ -79,7 +81,7 @@ class SecurityService {
     return [
       name: user.username,
       token: crypto.createToken(user.username),
-      roles: repository.getRoles(user.username)
+      roles: repository.getRoles(user.username),
     ]
   }
 
@@ -94,7 +96,7 @@ class SecurityService {
    * @since 0.1.0
    */
   Boolean requiresAuthorization(String parent, String field) {
-    Boolean isAnonymous = hasAnonymousIntrospection(parent, field) || hasAnonymousRule(parent, field)
+    Boolean isAnonymous = hasAnonymousIntrospection(parent) || hasAnonymousRule(parent, field)
 
     return !isAnonymous
   }
@@ -104,13 +106,12 @@ class SecurityService {
    * queried anonymously or not
    *
    * @param parent parent type name
-   * @param field field name
    * @return true if introspection can be queried anonymously
    * @since 0.1.0
    */
-  Boolean hasAnonymousIntrospection(String parent, String field) {
+  Boolean hasAnonymousIntrospection(String parent) {
     List<String> rules = config.security.auth.rules.instrospection as List<String>
-    Boolean allowed = 'ANONYMOUS' in rules  && isIntrospection(parent)
+    Boolean allowed = ROLE_ANONYMOUS in rules  && isIntrospection(parent)
 
     return allowed
   }
@@ -128,7 +129,7 @@ class SecurityService {
     Map<String,?> rules = config.security.auth.rules
     Map<String,?> parentTypes = rules?.get(parent) as Map<String,?>
     List<String> roles = parentTypes?.get(field) as List<String>
-    Boolean allowed = 'ANONYMOUS' in roles
+    Boolean allowed = ROLE_ANONYMOUS in roles
 
     return (!roles && !isIntrospection(parent)) || allowed
   }
@@ -167,10 +168,11 @@ class SecurityService {
    * @return a checker function
    * @since 0.1.0
    */
+  @SuppressWarnings('UnusedMethodParameter')
   Closure<Boolean> checkAuthorization(String type, String field) {
     return { String username ->
-      List<String> roles = repository.getRoles(username)
-      AppConfig.Security.Auth rules = config.security.auth
+      // List<String> roles = repository.getRoles(username)
+      // AppConfig.Security.Auth rules = config.security.auth
 
       return true
     }
