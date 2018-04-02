@@ -4,6 +4,7 @@ import { fromJS } from 'immutable'
 import books from './books'
 import security from './security'
 import storage from '../storage'
+import dashboard from './dashboard'
 
 /**
  * Default http client. Authorization header is calling
@@ -50,5 +51,6 @@ client.interceptors.request.use(ok, ko)
  */
 export default {
     books: books(client),
-    security: security(client)
+    security: security(client),
+    dashboard: dashboard(client)
 }

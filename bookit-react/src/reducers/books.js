@@ -23,7 +23,7 @@ export const initialState = Map({
 /**
  * Reducers related to book management
  */
-const bookReducer = (state = initialState, action) => {
+const bookReducers = (state = initialState, action) => {
     switch(action.type) {
     case actionTypes.BOOKS.LIST_REQUEST:
         return state
@@ -67,4 +67,4 @@ export const actionCreators = {
     }
 }
 
-export default bookReducer
+export default bookReducers
