@@ -1,0 +1,5 @@
+# Statistics about books and authors
+type Stats {
+  books: Int
+  authors: Int
+}

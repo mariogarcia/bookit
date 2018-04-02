@@ -60,7 +60,7 @@ class BookRepository {
     return session
       .run(countBooksQuery)
       .single()
-      .get('no') as Integer
+      .get('no', 0)
   }
 
   /**

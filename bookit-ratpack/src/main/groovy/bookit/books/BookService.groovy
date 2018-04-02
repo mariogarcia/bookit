@@ -1,7 +1,7 @@
 package bookit.books
 
-import javax.inject.Inject
 import io.vavr.Tuple2
+import javax.inject.Inject
 import graphql.schema.DataFetchingEnvironment
 
 /**
@@ -30,5 +30,29 @@ class BookService {
     Tuple2<Integer, Integer> args = Selectors.list(env.arguments)
 
     return repository.list(args._1, args._2)
+  }
+
+  /**
+   * Returns the number of available books
+   *
+   * @param env data coming from the request
+   * @return the number of available books
+   * @since 0.1.0
+   */
+  @SuppressWarnings('UnusedMethodParameter')
+  Integer getBookCount(DataFetchingEnvironment env) {
+    return repository.countBooks()
+  }
+
+  /**
+   * Returns the number of available authors
+   *
+   * @param env data coming from the request
+   * @return the number of available authors
+   * @since 0.1.0
+   */
+  @SuppressWarnings('UnusedMethodParameter')
+  Integer getAuthorCount(DataFetchingEnvironment env) {
+    return 0
   }
 }

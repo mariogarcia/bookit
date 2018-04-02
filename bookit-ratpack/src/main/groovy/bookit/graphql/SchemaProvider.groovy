@@ -20,14 +20,22 @@ class SchemaProvider implements Provider<GraphQLSchema> {
   @Inject SecurityService securityService
 
   @Override
+  @SuppressWarnings('DuplicateStringLiteral')
   GraphQLSchema get() {
     return mergeSchemas {
       byResource('graphql/Login.graphql')
       byResource('graphql/Books.graphql')
+      byResource('graphql/Stats.graphql') {
+        mapType('Stats') {
+          link('books', bookService.&getBookCount)
+          link('authors', bookService.&getAuthorCount)
+        }
+      }
       byResource('graphql/Schema.graphql') {
         mapType('Query') {
           link('books', bookService.&list)
           link('login', securityService.&login)
+          link('stats', Utils.DELEGATE_TO_FIELDS)
         }
       }
     }
