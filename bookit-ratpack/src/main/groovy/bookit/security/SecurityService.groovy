@@ -8,6 +8,7 @@ import bookit.config.AppConfig
 import bookit.common.DefaultError
 import io.vavr.control.Option
 import io.vavr.control.Either
+import gql.DSL
 
 /**
  * Service responsible to check application security
@@ -62,11 +63,10 @@ class SecurityService {
   }
 
   GraphQLError buildLoginError() {
-    return new DefaultError(
-      message: 'Invalid Credentials',
-      extensions: [
-        i18n: 'ERROR.AUTH.INVALID',
-      ] as Map)
+    return DSL.error {
+      message 'Invalid Credentials'
+      extensions(i18n: 'ERROR.AUTH.INVALID')
+    }
   }
 
   /*
