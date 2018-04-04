@@ -1,17 +1,16 @@
 package bookit.security
 
+import gql.DSL
 import ratpack.handling.Context
 import graphql.schema.DataFetcher
 import graphql.schema.DataFetchingEnvironment
+import graphql.GraphQLError
 import graphql.schema.GraphQLType
 import graphql.schema.GraphQLFieldDefinition
-import graphql.language.SourceLocation
-import graphql.execution.ExecutionPath
 import graphql.execution.instrumentation.NoOpInstrumentation
 import graphql.execution.instrumentation.parameters.InstrumentationFieldFetchParameters
 import groovy.util.logging.Slf4j
 import groovy.transform.TupleConstructor
-import bookit.common.DefaultError
 
 /**
  * Naive authorization mechanism based on `graphql-java`
@@ -51,27 +50,14 @@ class SecurityInstrumentation extends NoOpInstrumentation {
    * Returns a {@link DataFetcher} which raises a security exception
    *
    * @params parameters of the current execution
-   * @return a {@link DataFetcher} raising an {@link I18nException}
+   * @return a {@link DataFetcher} raising an {@link GraphQLError}
    * @since 0.1.0
    */
   DataFetcher notAuthorized(InstrumentationFieldFetchParameters params) {
-    return { DataFetchingEnvironment env ->
-      SourceLocation sourceLocation = env.getFields()?.find()?.getSourceLocation()
-      ExecutionPath path = env.getFieldTypeInfo()?.getPath()
-      DefaultError error = [
-        message: 'Forbidden Resource',
-        extensions: [
-          i18n:'ERROR.SECURITY.FORBIDDEN'
-        ] as Map<String, Object>,
-        locations:[sourceLocation],
-      ] as DefaultError
-
-      params
-        .getExecutionContext()
-        .addError(error as graphql.GraphQLError, path)
-
-      return null
-    } as DataFetcher
+    return DSL.errorFetcher(params) {
+      message 'Forbidden Resource'
+      extensions(i18n: 'ERROR.SECURITY.FORBIDDEN')
+    }
   }
 
   /**
