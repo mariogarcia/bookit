@@ -57,7 +57,7 @@ class SecurityService {
 
     return Option
       .of(user)
-      .map(this.&createPayload)
+      .map(this::createPayload)
       .toEither(buildLoginError())
   }
 

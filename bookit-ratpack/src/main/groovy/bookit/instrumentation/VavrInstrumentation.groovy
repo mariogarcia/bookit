@@ -46,7 +46,7 @@ class VavrInstrumentation extends NoOpInstrumentation {
     return Option
       .of(o)
       .flatMap(this.handleResult(executionContext))
-      .map(this.&createValueDataFetcher)
+      .map(this::createValueDataFetcher)
       .getOrElse(EMPTY_DATA_FETCHER)
   }
 

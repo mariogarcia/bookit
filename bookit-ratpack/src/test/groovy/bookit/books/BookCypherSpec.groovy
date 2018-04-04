@@ -1,10 +1,14 @@
 package bookit.books
 
-import bookit.test.Neo4jSpec
+import static groovy.test.GroovyAssert.assertTrue
+
+import org.junit.Test
 import org.neo4j.graphdb.Result
+import bookit.test.Neo4jTestCaseBase
 
-class BookCypherSpec extends Neo4jSpec {
+class BookCypherSpec extends Neo4jTestCaseBase {
 
+  @Test
   void 'create book'() {
     given: 'a query of creating a single book'
     def query = '''
@@ -15,9 +19,10 @@ class BookCypherSpec extends Neo4jSpec {
       Result result = service.execute(query)
 
     then: 'we should not get any result'
-    !result
+    assertTrue !result
   }
 
+  @Test
   void 'create and get book'() {
     given: 'a query of creating a single book'
     def create = '''
@@ -33,12 +38,13 @@ class BookCypherSpec extends Neo4jSpec {
     Result retrieveResult = service.execute(retrieve)
 
     then: 'we should not get anything from creation'
-    !createResult
+    assertTrue !createResult
 
     and: 'we should get the title of the retrieved book'
-    retrieveResult.first().title == "Java 9"
+    assertTrue retrieveResult.first().title == "Java 9"
   }
 
+  @Test
   void 'create an author, a book and the relationship between them'() {
     given: 'a creation query'
     def create = '''
@@ -65,12 +71,13 @@ class BookCypherSpec extends Neo4jSpec {
     def result = service.execute(retrieve)
 
     then: 'we should get the correct age'
-    result.first().age == 34
+    assertTrue result.first().age == 34
 
     and: 'there should be no more results'
-    !result.hasNext()
+    assertTrue !result.hasNext()
   }
 
+  @Test
   void 'create two books shared by one of the authors'() {
     given: 'creation query'
     def create = '''
@@ -100,9 +107,9 @@ class BookCypherSpec extends Neo4jSpec {
     def result = service.execute(getOtherBook)
 
     then: 'we should get the other book written by other authors'
-    result.first().title == 'Book2'
+    assertTrue result.first().title == 'Book2'
 
     and: 'there should be no more resuls'
-    !result.hasNext()
+    assertTrue !result.hasNext()
   }
 }

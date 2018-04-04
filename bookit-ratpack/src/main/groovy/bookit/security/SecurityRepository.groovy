@@ -43,7 +43,7 @@ class SecurityRepository {
 
     return Optional
       .ofNullable(user)
-      .map(this.&mapToUser)
+      .map(this::mapToUser)
       .orElse(null) as User
   }
 

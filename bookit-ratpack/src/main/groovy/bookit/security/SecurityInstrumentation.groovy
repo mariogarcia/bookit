@@ -39,8 +39,8 @@ class SecurityInstrumentation extends NoOpInstrumentation {
 
     return context
       .header('Authorization')
-      .flatMap(this.&getToken)
-      .flatMap(securityService.&checkAuthentication)
+      .flatMap(this::getToken)
+      .flatMap(securityService::checkAuthentication)
       .filter(securityService.checkAuthorization(parentType.name, fieldDefinition.name))
       .map { dataFetcher }
       .orElse(notAuthorized(params))

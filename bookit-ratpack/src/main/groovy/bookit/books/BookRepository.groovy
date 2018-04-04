@@ -31,7 +31,7 @@ class BookRepository {
     return session
       .run(listQuery)
       .list()
-      .collect(this.&toMap)
+      .collect(Record::asMap)
   }
 
   /**
@@ -86,7 +86,7 @@ class BookRepository {
     return session
       .run(booksByAuthorNameQuery, [name: authorName] as Map<String, Object>)
       .list()
-      .collect(this.&toMap)
+      .collect(Record::asMap)
   }
 
   /**
@@ -103,16 +103,5 @@ class BookRepository {
     RETURN
       books
     '''
-  }
-
-  /**
-   * Converts a given record to a map of properties
-   *
-   * @param record the record to convert
-   * @return a map
-   * @since 0.1.0
-   */
-  Map toMap(Record record) {
-    return record.asMap()
   }
 }
