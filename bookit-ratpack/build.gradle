@@ -35,8 +35,9 @@ dependencies {
   compile "org.flywaydb:flyway-core:$flyway"
   compile "com.auth0:java-jwt:$auth0"
   compile "org.neo4j.driver:neo4j-java-driver:$neo4j_driver"
+  compile "commons-io:commons-io:$commons_io"
 
-  testCompile 'org.neo4j.test:neo4j-harness:3.3.4'
+  testCompile "org.neo4j.test:neo4j-harness:$neo4j_db"
   testCompile "junit:junit:$junit"
 }
 

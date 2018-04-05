@@ -29,6 +29,7 @@ class SchemaProvider implements Provider<GraphQLSchema> {
         mapType('Stats') {
           link('books', bookService::getBookCount)
           link('authors', bookService::getAuthorCount)
+          link('technologies', bookService::getTechnologiesCount)
         }
       }
       byResource('graphql/Schema.graphql') {

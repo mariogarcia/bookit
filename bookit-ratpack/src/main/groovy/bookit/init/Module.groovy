@@ -6,6 +6,7 @@ import com.google.inject.multibindings.Multibinder
 import ratpack.service.Service
 
 import bookit.db.FlywayService
+import bookit.books.MonitorService
 
 /**
  * Binds all initial services
@@ -19,6 +20,7 @@ class Module extends AbstractModule {
 
     servicesBinder.with {
       addBinding().to(FlywayService).in(Scopes.SINGLETON)
+      addBinding().to(MonitorService).in(Scopes.SINGLETON)
     }
   }
 }

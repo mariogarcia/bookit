@@ -45,7 +45,7 @@ class BookRepository {
     MATCH (book:Book)
     RETURN
       book.title as title,
-      book.thumbnail as imageUri
+      book.thumbnail as thumbnail
     ORDER BY book.year DESC
     '''
   }
@@ -72,6 +72,56 @@ class BookRepository {
   String getCountBooksQuery() {
     return '''
     MATCH (b:Book) RETURN count(b) as no
+    '''
+  }
+
+  /**
+   * Returns the number of available technologies in the database
+   *
+   * @return the number of technologies found in db
+   * @since 0.1.0
+   */
+  Integer countTechnologies() {
+    return session
+      .run(countTechnologiesQuery)
+      .single()
+      .get('no', 0)
+  }
+
+  /**
+   * Query string to get the number of technologies
+   *
+   * @return the query string
+   * @since 0.1.0
+   */
+  String getCountTechnologiesQuery() {
+    return '''
+    MATCH (t:Technology) RETURN count(t) as no
+    '''
+  }
+
+  /**
+   * Returns the number of available authors in the database
+   *
+   * @return the number of authors found in db
+   * @since 0.1.0
+   */
+  Integer countAuthors() {
+    return session
+      .run(countAuthorsQuery)
+      .single()
+      .get('no', 0)
+  }
+
+  /**
+   * Query string to get the number of authors
+   *
+   * @return the query string
+   * @since 0.1.0
+   */
+  String getCountAuthorsQuery() {
+    return '''
+    MATCH (a:Author) RETURN count(a) as no
     '''
   }
 

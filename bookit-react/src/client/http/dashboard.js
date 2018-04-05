@@ -7,6 +7,7 @@ export default (client) => ({
           stats {
             books
             authors
+            technologies
           }
         }
         `

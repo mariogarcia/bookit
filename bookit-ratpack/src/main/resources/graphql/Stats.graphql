@@ -2,4 +2,5 @@
 type Stats {
   books: Int
   authors: Int
+  technologies: Int
 }

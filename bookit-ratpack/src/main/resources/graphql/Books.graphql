@@ -3,7 +3,7 @@
 type Book {
   title: String
   published: String
-  imageUri: String
+  thumbnail: String
   shortDescription: String
   author: [Author]
 }

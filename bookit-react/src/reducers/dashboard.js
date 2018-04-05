@@ -20,7 +20,7 @@ export const initialState = Map({
   stats: {
     books: 0,
     authors: 0,
-    languages: 0,
+    technologies: 0,
     bartolos: 0
   }
 })
@@ -72,7 +72,7 @@ export const selectors = {
     getStats: (state) => ({
         books: state.dashboard.getIn(['stats', 'books']) || 0,
         authors: state.dashboard.getIn(['stats', 'authors']) || 0,
-        languages: state.dashboard.getIn(['stats', 'languages']) || 0,
+        technologies: state.dashboard.getIn(['stats', 'technologies']) || 0,
         bartolos: state.dashboard.getIn(['stats', 'bartolos']) || 0,
     })
 

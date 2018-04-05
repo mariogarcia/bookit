@@ -53,6 +53,18 @@ class BookService {
    */
   @SuppressWarnings('UnusedMethodParameter')
   Integer getAuthorCount(DataFetchingEnvironment env) {
-    return 0
+    return repository.countAuthors()
+  }
+
+  /**
+   * Returns the number of different technologies
+   *
+   * @param env data coming from the request
+   * @return the number of technologies listed
+   * @since 0.1.0
+   */
+  @SuppressWarnings('UnusedMethodParameter')
+  Integer getTechnologiesCount(DataFetchingEnvironment env) {
+    return repository.countTechnologies()
   }
 }

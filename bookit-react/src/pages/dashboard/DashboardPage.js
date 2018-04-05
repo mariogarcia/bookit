@@ -29,9 +29,9 @@ class DashboardPage extends React.Component {
                         <div className="row">
                             <div className="col-md-3">
                                 <CounterPanel
-                                    title='Languages'
+                                    title='Technologies'
                                     icon='github'
-                                    count={this.props.stats.languages} />
+                                    count={this.props.stats.technologies} />
                             </div>
                             <div className="col-md-3">
                                 <CounterPanel

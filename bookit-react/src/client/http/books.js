@@ -8,7 +8,7 @@ export default (client) => ({
           books(offset: $offset, maxRows: $maxRows) {
             title
             shortDescription
-            imageUri
+            thumbnail
           }
         }
         `

@@ -16,7 +16,7 @@ export class BookList extends React.Component {
         const books = this.props.books.map((book, index) => (
                 <Card
                     key={index}
-                    image={book.get('imageUri')}
+                    image={book.get('thumbnail')}
                     title={book.get('title')}
 
                     detailLink={detailLink}
