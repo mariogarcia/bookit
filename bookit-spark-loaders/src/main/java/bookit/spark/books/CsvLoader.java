@@ -28,11 +28,14 @@ public final class CsvLoader {
 
     SparkSession
       .builder()
+      .master("local")
+      .appName("BookCsv")
       .getOrCreate()
       .read()
       .textFile(fileURI)
       .javaRDD()
       .map(CsvLoader::createStatement)
+      .repartition(20)
       .saveAsTextFile("/tmp/statements/");
   }
 
