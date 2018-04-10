@@ -3,6 +3,7 @@ package bookit.spark.common;
 import org.apache.spark.SparkConf;
 import org.apache.spark.SparkContext;
 import org.neo4j.spark.Neo4JavaSparkContext;
+import org.apache.spark.sql.SparkSession;
 
 /**
  * Configuration related functions
@@ -32,6 +33,14 @@ public final class Configuration {
     SparkContext sparkContext = new SparkContext(config);
 
     return sparkContext;
+  }
+
+  public static SparkSession getSpark() {
+    return SparkSession
+      .builder()
+      .master("local")
+      .appName("unknown")
+      .getOrCreate();
   }
 
   public static Neo4JavaSparkContext getNeo4jContext(SparkContext sparkContext) {
