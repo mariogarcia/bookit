@@ -25,7 +25,8 @@ public final class Configuration {
   public static SparkConf getConf(String appName) {
     return new SparkConf()
       .setMaster("local")
-      .setAppName(appName);
+      .setAppName(appName)
+      .set("spark.neo4j.bolt.url", "neo4j");
   }
 
   public static SparkContext getSparkContext(String appName) {
@@ -40,6 +41,9 @@ public final class Configuration {
       .builder()
       .master("local")
       .appName("unknown")
+      .config("spark.neo4j.bolt.url", "bolt://neo4j")
+      .config("spark.neo4j.bolt.username", "neo")
+      .config("spark.neo4j.bolt.password", "neo")
       .getOrCreate();
   }
 

@@ -4,11 +4,17 @@ import static java.lang.String.join;
 import static bookit.spark.common.Configuration.getSpark;
 import static bookit.spark.common.ResourceUtils.getResourceURI;
 
+import java.util.HashMap;
 import java.net.URISyntaxException;
+import io.vavr.control.Try;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
+import org.apache.spark.SparkContext;
+import org.neo4j.spark.Neo4jConfig;
+import org.neo4j.spark.Neo4jDataFrame;
+import org.apache.spark.api.java.function.MapFunction;
 
 /**
  * Reads a CSV file and loads its content in a Neo4j database
@@ -29,14 +35,67 @@ public final class CsvLoader {
    */
   public static void main(String args[]) throws URISyntaxException {
     final String fileURI = getResourceURI("/books.csv");
-    final Dataset<String> statements = getSpark()
+    final SparkSession session = getSpark();
+    final SparkContext context = session.sparkContext();
+
+    final Dataset<String> statements = session
       .read()
       .format("csv")
       .option("header", "true")
       .option("delimiter", "|")
       .load(fileURI)
-      .map(CsvLoader::toStatement, Encoders.STRING());
+      .map(CsvLoader::toStatement, Encoders.STRING())
+      .cache();
 
+    Neo4jConfig neo4jConfig = Neo4jConfig.apply(context.getConf());
+
+    statements
+      .map(CsvLoader.executeStatement(neo4jConfig), Encoders.bean(Result.class))
+      //      .filter() // filter errors
+      .foreach(result -> System.out.println(result.result));
+  }
+
+  static class Result implements java.io.Serializable {
+    private String result;
+
+    public void setResult(String result) {
+      this.result = result;
+    }
+
+    public String getResult() {
+      return this.result;
+    }
+
+    public static Result SUCCESS() {
+      Result result = new Result();
+      result.result = "SUCCESS";
+      return result;
+    }
+
+    public static Result FAILURE() {
+      Result result = new Result();
+      result.result = "FAILURE";
+      return result;
+    }
+  }
+
+  /**
+   * Given a {@link Neo4jConfig} it returns a function capable of
+   * executing cypher statements against Neo4j
+   *
+   * @param neo4jConfig Neo4j configuration
+   * @return a function executing a cypher statement against Neo4j
+   * @since 0.1.0
+   */
+  static MapFunction<String, Result> executeStatement(Neo4jConfig neo4jConfig) {
+    return (String cypher) -> {
+      try {
+        Neo4jDataFrame.execute(neo4jConfig, cypher, new HashMap<String, Object>());
+        return Result.SUCCESS();
+      } catch(Throwable th) {
+        return Result.FAILURE();
+      }
+    };
   }
 
   /**
