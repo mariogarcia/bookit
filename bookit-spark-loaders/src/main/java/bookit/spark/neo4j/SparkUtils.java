@@ -21,7 +21,7 @@ public class SparkUtils {
    * given type
    * @since 0.1.0
    */
-  public static <T> Encoder<T> serializingResultAs(Class<T> clazz) {
+  public static <T> Encoder<T> serializeTo(Class<T> clazz) {
     return Encoders.bean(clazz);
   }
 

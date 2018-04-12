@@ -4,7 +4,7 @@ import static java.lang.String.join;
 import static bookit.spark.common.Configuration.getSpark;
 import static bookit.spark.common.ResourceUtils.getResourceURI;
 import static bookit.spark.neo4j.SparkUtils.safely;
-import static bookit.spark.neo4j.SparkUtils.serializingResultAs;
+import static bookit.spark.neo4j.SparkUtils.serializeTo;
 
 import bookit.spark.neo4j.Stats;
 import bookit.spark.neo4j.StatsUtils;
@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.net.URISyntaxException;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.Row;
-import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.SparkContext;
 import org.neo4j.spark.Neo4jConfig;
@@ -40,23 +39,20 @@ public final class CsvLoader {
    * @since 0.1.0
    */
   public static void main(String args[]) throws URISyntaxException {
-    final String fileURI = getResourceURI("/books.csv");
-    final SparkSession session = getSpark();
-    final SparkContext context = session.sparkContext();
+    String fileURI = getResourceURI("/books.csv");
+    SparkSession session = getSpark();
+    SparkContext context = session.sparkContext();
+    Neo4jConfig neo4jConfig = Neo4jConfig.apply(context.getConf());
+    MapFunction<String, Stats> stmtToStats = safely(executeCypher(neo4jConfig), StatsUtils.empty());
 
-    final Dataset<String> statements = session
+    Stats statistics = session
       .read()
       .format("csv")
       .option("header", "true")
       .option("delimiter", "|")
       .load(fileURI)
-      .map(CsvLoader::toStatement, Encoders.STRING());
-
-    Neo4jConfig neo4jConfig = Neo4jConfig.apply(context.getConf());
-    MapFunction<String, Stats> stmtToStats = safely(executeCypher(neo4jConfig), StatsUtils.empty());
-
-    Stats statistics = statements
-      .map(stmtToStats, serializingResultAs(Stats.class))
+      .map(CsvLoader::toNeo4jStmt, Encoders.STRING())
+      .map(stmtToStats, serializeTo(Stats.class))
       .reduce(StatsUtils::combine);
 
     System.out.println("TOTAL: " + statistics.getTotal());
@@ -83,7 +79,7 @@ public final class CsvLoader {
    * @return an string containing a cypher statement
    * @since 0.1.0
    */
-  public static String toStatement(Row row) {
+  public static String toNeo4jStmt(Row row) {
     String title = row.getString(0);
     String area = row.getString(1);
     String isbn = row.getString(2);
