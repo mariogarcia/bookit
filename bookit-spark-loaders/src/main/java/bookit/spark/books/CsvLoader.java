@@ -3,18 +3,17 @@ package bookit.spark.books;
 import static java.lang.String.join;
 import static bookit.spark.common.Configuration.getSpark;
 import static bookit.spark.common.ResourceUtils.getResourceURI;
+import static bookit.spark.neo4j.SparkUtils.safely;
+import static bookit.spark.neo4j.SparkUtils.serializingResultAs;
 
 import bookit.spark.neo4j.Stats;
 import bookit.spark.neo4j.StatsUtils;
 import java.util.Map;
 import java.util.HashMap;
 import java.net.URISyntaxException;
-import io.vavr.control.Try;
-import io.vavr.control.Either;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Encoder;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.SparkContext;
 import org.neo4j.spark.Neo4jConfig;
@@ -61,18 +60,6 @@ public final class CsvLoader {
       .reduce(StatsUtils::combine);
 
     System.out.println("TOTAL: " + statistics.getTotal());
-  }
-
-  static <T> Encoder<T> serializingResultAs(Class<T> clazz) {
-    return Encoders.bean(clazz);
-  }
-
-  static <I, O> MapFunction<I, O> safely(MapFunction<I, O> fn, O defaultValue) {
-    return (I input) -> {
-      return Try
-        .of(() -> fn.call(input))
-        .getOrElse(defaultValue);
-    };
   }
 
   /**
