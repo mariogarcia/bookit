@@ -4,6 +4,8 @@ import static java.lang.String.join;
 import static bookit.spark.common.Configuration.getSpark;
 import static bookit.spark.common.ResourceUtils.getResourceURI;
 
+import bookit.spark.neo4j.Stats;
+import bookit.spark.neo4j.StatsUtils;
 import java.util.Map;
 import java.util.HashMap;
 import java.net.URISyntaxException;
@@ -12,6 +14,7 @@ import io.vavr.control.Either;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Encoder;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.SparkContext;
 import org.neo4j.spark.Neo4jConfig;
@@ -51,13 +54,25 @@ public final class CsvLoader {
       .map(CsvLoader::toStatement, Encoders.STRING());
 
     Neo4jConfig neo4jConfig = Neo4jConfig.apply(context.getConf());
+    MapFunction<String, Stats> stmtToStats = safely(executeCypher(neo4jConfig), StatsUtils.empty());
 
-    statements
-      .map(executeCypher(neo4jConfig), Encoders.javaSerialization(Try.class))
-      .filter(attempt -> attempt.isFailure())
-      .foreach(attempt -> {
-          System.out.println(attempt.getCause().getMessage());
-      });
+    Stats statistics = statements
+      .map(stmtToStats, serializingResultAs(Stats.class))
+      .reduce(StatsUtils::combine);
+
+    System.out.println("TOTAL: " + statistics.getTotal());
+  }
+
+  static <T> Encoder<T> serializingResultAs(Class<T> clazz) {
+    return Encoders.bean(clazz);
+  }
+
+  static <I, O> MapFunction<I, O> safely(MapFunction<I, O> fn, O defaultValue) {
+    return (I input) -> {
+      return Try
+        .of(() -> fn.call(input))
+        .getOrElse(defaultValue);
+    };
   }
 
   /**
@@ -68,14 +83,9 @@ public final class CsvLoader {
    * @return a function executing a cypher statement against Neo4j
    * @since 0.1.0
    */
-  static MapFunction<String, Try> executeCypher(Neo4jConfig config) {
+  static MapFunction<String, Stats> executeCypher(Neo4jConfig config) {
     return (String cypher) -> {
-      return Try.of(() -> {
-          return Neo4jDataFrame
-            .execute(config, cypher, EMPTY_MAP)
-            .statement()
-            .text();
-        });
+      return StatsUtils.of(Neo4jDataFrame.execute(config, cypher, EMPTY_MAP));
     };
   }
 
