@@ -4,9 +4,11 @@ import static java.lang.String.join;
 import static bookit.spark.common.Configuration.getSpark;
 import static bookit.spark.common.ResourceUtils.getResourceURI;
 
+import java.util.Map;
 import java.util.HashMap;
 import java.net.URISyntaxException;
 import io.vavr.control.Try;
+import io.vavr.control.Either;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.Dataset;
@@ -22,6 +24,8 @@ import org.apache.spark.api.java.function.MapFunction;
  * @since 0.1.0
  */
 public final class CsvLoader {
+
+  public static final Map<String, Object> EMPTY_MAP = new HashMap<String, Object>();
 
   private CsvLoader() {
     // To prevent JaCoCo to check class instantiation
@@ -44,39 +48,16 @@ public final class CsvLoader {
       .option("header", "true")
       .option("delimiter", "|")
       .load(fileURI)
-      .map(CsvLoader::toStatement, Encoders.STRING())
-      .cache();
+      .map(CsvLoader::toStatement, Encoders.STRING());
 
     Neo4jConfig neo4jConfig = Neo4jConfig.apply(context.getConf());
 
     statements
-      .map(CsvLoader.executeStatement(neo4jConfig), Encoders.bean(Result.class))
-      //      .filter() // filter errors
-      .foreach(result -> System.out.println(result.result));
-  }
-
-  static class Result implements java.io.Serializable {
-    private String result;
-
-    public void setResult(String result) {
-      this.result = result;
-    }
-
-    public String getResult() {
-      return this.result;
-    }
-
-    public static Result SUCCESS() {
-      Result result = new Result();
-      result.result = "SUCCESS";
-      return result;
-    }
-
-    public static Result FAILURE() {
-      Result result = new Result();
-      result.result = "FAILURE";
-      return result;
-    }
+      .map(executeCypher(neo4jConfig), Encoders.javaSerialization(Try.class))
+      .filter(attempt -> attempt.isFailure())
+      .foreach(attempt -> {
+          System.out.println(attempt.getCause().getMessage());
+      });
   }
 
   /**
@@ -87,14 +68,14 @@ public final class CsvLoader {
    * @return a function executing a cypher statement against Neo4j
    * @since 0.1.0
    */
-  static MapFunction<String, Result> executeStatement(Neo4jConfig neo4jConfig) {
+  static MapFunction<String, Try> executeCypher(Neo4jConfig config) {
     return (String cypher) -> {
-      try {
-        Neo4jDataFrame.execute(neo4jConfig, cypher, new HashMap<String, Object>());
-        return Result.SUCCESS();
-      } catch(Throwable th) {
-        return Result.FAILURE();
-      }
+      return Try.of(() -> {
+          return Neo4jDataFrame
+            .execute(config, cypher, EMPTY_MAP)
+            .statement()
+            .text();
+        });
     };
   }
 
